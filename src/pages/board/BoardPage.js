@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Paging from '../../components/Paging';
 import { List, Space, FloatButton } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
+import { getAllPost } from '../../utils/slice/boardSlice';
+import { useDispatch } from 'react-redux';
+import { useCookies } from 'react-cookie';
 
 export const BoardPage = () => {
+    const dispatch = useDispatch();
+    const [cookies, setCookie, removeCookie] = useCookies(['accessToken']);
+
+    useEffect(() => {
+        dispatch(getAllPost(cookies.accessToken));
+    }, []);
+
     const [data, setData] = useState([
         {
             id: 1,

@@ -12,9 +12,15 @@ const initialState = {
     status: '',
 };
 
-export const getAllPost = createAsyncThunk('boards/getAll', async (data, thunkAPI) => {
+export const getAllPost = createAsyncThunk('boards/getAll', async (accessToken, thunkAPI) => {
     try {
-        const res = await axios.get(`${SERVER_URL}/boards`);
+        const res = await axios.get(`${SERVER_URL}/boards`, {
+            headers: {
+                authorization: 'Bearer ' + accessToken,
+            },
+            withCredentials: true,
+        });
+        console.log(res);
         return res;
     } catch (error) {
         return thunkAPI.rejectWithValue({
@@ -90,11 +96,13 @@ export const deletePost = createAsyncThunk('boards/delete', async (id, thunkAPI)
 
 export const uploadFile = createAsyncThunk('boards/file', async (data, thunkAPI) => {
     try {
-        const { accessToken, file } = data;
-        console.log(data);
-        const res = await axios.post(`${SERVER_URL}/boards/upload`, file, {
+        const dataSet = JSON.parse(data.formData.get('data')); // 'data' 키로 추가한 정보를 꺼냅니다
+        const { accessToken } = dataSet;
+
+        const res = await axios.post(`${SERVER_URL}/boards/upload`, data, {
             headers: {
                 authorization: 'Bearer ' + accessToken,
+                'Content-Type': 'multipart/form-data',
             },
             withCredentials: true,
         });
@@ -147,7 +155,6 @@ export const authSlice = createSlice({
                 state.status = '';
             })
             .addCase(createPost.fulfilled, (state, { payload }) => {
-                console.log(payload);
                 state.status = 'SUCCESS';
                 state.authData = payload.data;
             })

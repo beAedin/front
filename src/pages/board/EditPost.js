@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { createPost, uploadFile } from '../../utils/slice/boardSlice';
 import { message, Flex, Input, Upload } from 'antd';
@@ -17,17 +17,22 @@ export const EditPostPage = () => {
     const [files, setFiles] = useState([]);
     const [cookies] = useCookies(['accessToken']);
     const navigate = useNavigate();
+    const inputRef = useRef(null);
 
-    const props = {
-        name: 'file',
-        multiple: true,
-        onChange(info) {
-            info.file.status = 'done';
-            setFiles(info.fileList);
-        },
-        onRemove(e) {
-            setFiles([]);
-        },
+    const saveFileImage = (e) => {
+        try {
+            let files = inputRef.current.files;
+            console.log(files);
+            let formData = new FormData();
+            for (let i = 0; i < files.length; i++) {
+                console.log(files[i]);
+                formData.append('files', files[i]);
+            }
+            // console.log(formData.getAll('files'));
+            return formData;
+        } catch (error) {
+            // 이미지 업로드 실패
+        }
     };
 
     const handleTitleChange = (e) => {
@@ -38,13 +43,24 @@ export const EditPostPage = () => {
         setContents(e.target.value);
     };
 
-    const handlePost = (e) => {
+    const handlePost = async (e) => {
+        e.preventDefault();
         dispatch(createPost({ accessToken: cookies.accessToken, title, description: contents }))
-            .then((res) => {
+            .then(async (res) => {
                 // 만약 파일 있으면=
-                if (files.length > 0) {
-                    dispatch(uploadFile({ accessToken: cookies.accessToken, file: files }))
+
+                const formData = saveFileImage(inputRef.current);
+                console.log(formData.getAll('files'));
+                if (formData) {
+                    let dataSet = {
+                        accessToken: cookies.accessToken,
+                    };
+
+                    formData.append('data', JSON.stringify(dataSet)); // JSON 형식으로 파싱 후 추가
+
+                    dispatch(uploadFile({ formData }))
                         .then((res) => {
+                            console.log('성공', res);
                             navigate('/board');
                         })
                         .catch((err) => {
@@ -70,18 +86,18 @@ export const EditPostPage = () => {
                     onChange={handleContentsChange}
                     placeholder="Contents"
                     className="h-72"
-                    // style={{ height: 120, resize: 'none' }}
                 />
-                <Dragger {...props}>
-                    <p className="ant-upload-drag-icon">
-                        <InboxOutlined />
-                    </p>
-                    <p className="ant-upload-text">Click or drag file to this area to upload</p>
-                    <p className="ant-upload-hint">
-                        Support for a single or bulk upload. Strictly prohibited from uploading
-                        company data or other banned files.
-                    </p>
-                </Dragger>
+                <button onClick={() => inputRef.current.click()}>
+                    업로드
+                    <input
+                        type="file"
+                        accept="image/jpg, image/jpeg, image/png"
+                        multiple
+                        ref={inputRef}
+                        onChange={saveFileImage}
+                        style={{ display: 'none' }}
+                    />
+                </button>
             </Flex>
             <FloatButton onClick={handlePost} icon={<EditOutlined />} tooltip={<div>Write</div>} />
         </div>
