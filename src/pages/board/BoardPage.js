@@ -5,6 +5,7 @@ import { EditOutlined } from '@ant-design/icons';
 import { getAllPost, selectBoardData } from '../../utils/slice/boardSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
+import { format } from 'date-fns';
 
 export const BoardPage = () => {
     const dispatch = useDispatch();
@@ -127,31 +128,32 @@ export const BoardPage = () => {
                             onChange: (page) => {
                                 console.log(page);
                             },
-                            pageSize: 4,
+                            pageSize: 3,
                         }}
                         dataSource={post}
                         renderItem={(item) => (
                             <List.Item
                                 className="bg-slate-50"
                                 key={item.title}
-                                actions={[
-                                    <p>시간입니다</p>,
-                                    // <IconText
-                                    //     icon={StarOutlined}
-                                    //     text="156"
-                                    //     key="list-vertical-star-o"
-                                    // />,
-                                    // <IconText
-                                    //     icon={LikeOutlined}
-                                    //     text="156"
-                                    //     key="list-vertical-like-o"
-                                    // />,
-                                    // <IconText
-                                    //     icon={MessageOutlined}
-                                    //     text="2"
-                                    //     key="list-vertical-message"
-                                    // />,
-                                ]}
+                                actions={
+                                    [
+                                        // <IconText
+                                        //     icon={StarOutlined}
+                                        //     text="156"
+                                        //     key="list-vertical-star-o"
+                                        // />,
+                                        // <IconText
+                                        //     icon={LikeOutlined}
+                                        //     text="156"
+                                        //     key="list-vertical-like-o"
+                                        // />,
+                                        // <IconText
+                                        //     icon={MessageOutlined}
+                                        //     text="2"
+                                        //     key="list-vertical-message"
+                                        // />,
+                                    ]
+                                }
                             >
                                 <List.Item.Meta
                                     // avatar={<Avatar src={item.avatar} />}
@@ -161,11 +163,19 @@ export const BoardPage = () => {
                                         </Link>
                                     }
                                     description={
-                                        <div className="flex justify-end">{item.author}</div>
+                                        <div className="text-right">
+                                            <div className="flex justify-end text-stone-800">
+                                                {item.userEmail}
+                                            </div>
+                                            {format(
+                                                new Date(item.updatedAt),
+                                                'yyyy-MM-dd HH:mm:ss'
+                                            )}
+                                        </div>
                                     }
                                 />
 
-                                {<p>{item.description}</p>}
+                                {<p className="mb-16">{item.description}</p>}
                             </List.Item>
                         )}
                     />
