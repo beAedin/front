@@ -11,14 +11,20 @@ import { initBoardData } from '../../utils/slice/boardSlice';
 export const BoardPage = () => {
     const dispatch = useDispatch();
     const post = useSelector(selectBoardData);
+    const [displayPost, setDisplayPost] = useState();
     const [cookies] = useCookies(['accessToken']);
 
     useEffect(() => {
-        dispatch(getAllPost(cookies.accessToken));
+        dispatch(getAllPost(cookies.accessToken)).then((res) => {});
     }, []);
 
     useEffect(() => {
-        console.log(post);
+        if (post.length > 0) {
+            const sortedData = [...post].sort((a, b) => {
+                return new Date(b.updatedAt) - new Date(a.updatedAt);
+            });
+            setDisplayPost(sortedData);
+        }
     }, [post]);
 
     return (
@@ -39,7 +45,7 @@ export const BoardPage = () => {
                             },
                             pageSize: 3,
                         }}
-                        dataSource={post}
+                        dataSource={displayPost}
                         renderItem={(item) => (
                             <List.Item className="bg-slate-50" key={item.title} actions={[]}>
                                 <List.Item.Meta

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Button, Input } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
-import { getPostById, selectOneBoardData } from '../../utils/slice/boardSlice';
+import { getPostById, selectOneBoardData, deletePost } from '../../utils/slice/boardSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import { format } from 'date-fns';
@@ -35,18 +35,30 @@ export const BoardDetailPage = () => {
         });
     };
 
+    const onUpdateBoard = () => {};
+
+    const onDeleteBoard = () => {
+        dispatch(
+            deletePost({
+                accessToken: cookies.accessToken,
+                id: post.id,
+            })
+        );
+    };
+
     useEffect(() => {
         dispatch(getPostById({ accessToken: cookies.accessToken, id: params.boardId }));
     }, []);
 
     useEffect(() => {
+        console.log(post.currentUserEmail);
+        // console.log(post.currentUserId);
         console.log(post);
-        console.log(post.user);
     }, [post]);
 
     return (
         <div className=" h-5/6 px-10">
-            <div className="bg-slate-100 h-4/6 mt-10 p-10">
+            <div className="relative bg-slate-100 h-4/6 mt-10 p-10">
                 <h1 className="text-4xl">{post?.title}</h1>
                 <p className="text-right">{post?.user?.email}</p>
                 {post.updatedAt && (
@@ -55,6 +67,16 @@ export const BoardDetailPage = () => {
                     </p>
                 )}
                 <p className="mt-12 text-xl text-stone-800">{post?.description}</p>
+                {post?.currentUserEmail === post.user?.email && (
+                    <div className="absolute bottom-5 right-5 ">
+                        <Button onClick={onUpdateBoard} className="mr-3">
+                            Edit
+                        </Button>
+                        <Button onClick={onDeleteBoard} danger>
+                            Delete
+                        </Button>
+                    </div>
+                )}
             </div>
 
             <h1 className="text-left text-3xl mt-10 mb-6 mx-4">Comment</h1>

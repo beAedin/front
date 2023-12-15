@@ -86,11 +86,12 @@ export const updatePost = createAsyncThunk('boards/update', async (data, thunkAP
     }
 });
 
-export const deletePost = createAsyncThunk('boards/delete', async (id, thunkAPI) => {
+export const deletePost = createAsyncThunk('boards/delete', async (data, thunkAPI) => {
     try {
-        const res = await axios.delete(`${SERVER_URL}/boards/${id}}`, {
+        const { accessToken, id } = data;
+        const res = await axios.delete(`${SERVER_URL}/boards/${id}`, {
             headers: {
-                //authorization: 'Bearer ' + accessToken,
+                authorization: 'Bearer ' + accessToken,
             },
             withCredentials: true,
         });

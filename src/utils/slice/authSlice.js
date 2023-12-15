@@ -36,6 +36,28 @@ export const signUp = createAsyncThunk('auth/signup', async (data, thunkAPI) => 
     }
 });
 
+export const getUserInfo = createAsyncThunk('auth/getUserInfo', async (data, thunkAPI) => {
+    try {
+        const { boardId, userId, content, accessToken } = data;
+        console.log(accessToken);
+        const res = await axios.post(
+            `${SERVER_URL}/auth/test`,
+            { boardId, userId, content },
+            {
+                headers: {
+                    authorization: 'Bearer ' + accessToken,
+                },
+                withCredentials: true,
+            }
+        );
+        return res;
+    } catch (error) {
+        return thunkAPI.rejectWithValue({
+            errorMessage: error.response.data.message,
+        });
+    }
+});
+
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
