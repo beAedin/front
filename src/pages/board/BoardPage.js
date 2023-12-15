@@ -6,7 +6,7 @@ import { getAllPost, selectBoardData } from '../../utils/slice/boardSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import { format } from 'date-fns';
-import { initBoardData } from '../../utils/slice/boardSlice';
+import { initCommentsData } from '../../utils/slice/commentSlice';
 
 export const BoardPage = () => {
     const dispatch = useDispatch();
@@ -16,6 +16,7 @@ export const BoardPage = () => {
 
     useEffect(() => {
         dispatch(getAllPost(cookies.accessToken)).then((res) => {});
+        dispatch(initCommentsData());
     }, []);
 
     useEffect(() => {

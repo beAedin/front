@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Button, Input } from 'antd';
-import { EditOutlined } from '@ant-design/icons';
 import { getPostById, selectOneBoardData, deletePost } from '../../utils/slice/boardSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import { format } from 'date-fns';
 import Comment from '../../components/Comment';
-import { createComment, getAllComments } from '../../utils/slice/commentSlice';
+import { createComment, getAllComments, initCommentsData } from '../../utils/slice/commentSlice';
 import { selectCommentsData } from '../../utils/slice/commentSlice';
+import { useNavigate } from 'react-router-dom';
 
 const { TextArea } = Input;
 export const BoardDetailPage = () => {
     const params = useParams();
+    const navigate = useNavigate();
     const [commentInput, setCommentInput] = useState();
 
     const dispatch = useDispatch();
@@ -36,9 +37,17 @@ export const BoardDetailPage = () => {
         ).then((res) => {
             setCommentInput('');
         });
+        dispatch(
+            getAllComments({
+                accessToken: cookies.accessToken,
+                boardId: post.id,
+            })
+        );
     };
 
-    const onUpdateBoard = () => {};
+    const onUpdateBoard = () => {
+        navigate('/board/edit', { state: { postId: post?.id } });
+    };
 
     const onDeleteBoard = () => {
         dispatch(
@@ -50,19 +59,9 @@ export const BoardDetailPage = () => {
     };
 
     useEffect(() => {
-        dispatch(getPostById({ accessToken: cookies.accessToken, id: params.boardId }));
         dispatch(getAllComments({ accessToken: cookies.accessToken, id: params.boardId }));
+        dispatch(getPostById({ accessToken: cookies.accessToken, id: params.boardId }));
     }, []);
-
-    useEffect(() => {
-        console.log(post.currentUserEmail);
-        // console.log(post.currentUserId);
-        console.log(post);
-    }, [post]);
-
-    useEffect(() => {
-        console.log(comments);
-    }, [comments]);
 
     useEffect(() => {
         if (comments.length > 0) {

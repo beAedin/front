@@ -31,8 +31,7 @@ export const getAllComments = createAsyncThunk('comments/getAll', async (data, t
 export const createComment = createAsyncThunk('comments/post', async (data, thunkAPI) => {
     try {
         const { boardId, userId, content, accessToken } = data;
-        console.log(accessToken);
-        const res = await axios.post(
+        const create_res = await axios.post(
             `${SERVER_URL}/comments/write`,
             { boardId, userId, content },
             {
@@ -42,6 +41,13 @@ export const createComment = createAsyncThunk('comments/post', async (data, thun
                 withCredentials: true,
             }
         );
+
+        const res = await axios.get(`${SERVER_URL}/comments/${boardId}`, {
+            headers: {
+                authorization: 'Bearer ' + accessToken,
+            },
+            withCredentials: true,
+        });
         return res;
     } catch (error) {
         return thunkAPI.rejectWithValue({
@@ -52,9 +58,21 @@ export const createComment = createAsyncThunk('comments/post', async (data, thun
 
 export const updateComment = createAsyncThunk('comments/update', async (data, thunkAPI) => {
     try {
-        const res = await axios.patch(`${SERVER_URL}/comments/:id}`, data, {
+        const { accessToken, commentId, content, boardId } = data;
+        const updateRes = await axios.patch(
+            `${SERVER_URL}/comments/${commentId}`,
+            { commentId, content },
+            {
+                headers: {
+                    authorization: 'Bearer ' + accessToken,
+                },
+                withCredentials: true,
+            }
+        );
+
+        const res = await axios.get(`${SERVER_URL}/comments/${boardId}`, {
             headers: {
-                //authorization: 'Bearer ' + accessToken,
+                authorization: 'Bearer ' + accessToken,
             },
             withCredentials: true,
         });
@@ -91,8 +109,8 @@ export const commentSlice = createSlice({
         initStatus: (state) => {
             state.status = '';
         },
-        initAccessToken: (state) => {
-            state.accessToken = '';
+        initCommentsData: (state) => {
+            state.commentsData = [];
         },
     },
     extraReducers: (builder) => {
@@ -116,6 +134,7 @@ export const commentSlice = createSlice({
             .addCase(createComment.fulfilled, (state, { payload }) => {
                 console.log(payload);
                 state.status = 'SUCCESS';
+                state.commentsData = payload.data;
             })
             .addCase(createComment.rejected, (state, { payload }) => {
                 console.log(payload);
@@ -127,6 +146,7 @@ export const commentSlice = createSlice({
             })
             .addCase(updateComment.fulfilled, (state, { payload }) => {
                 state.status = 'SUCCESS';
+                state.commentsData = payload.data;
             })
             .addCase(updateComment.rejected, (state, { payload }) => {
                 state.status = 'ERROR';
@@ -145,5 +165,7 @@ export const commentSlice = createSlice({
             });
     },
 });
+
 export const selectCommentsData = (state) => state.comments.commentsData;
+export const { initCommentsData } = commentSlice.actions;
 export default commentSlice.reducer;

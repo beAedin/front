@@ -1,22 +1,49 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { createPost, uploadFile } from '../../utils/slice/boardSlice';
-import { message, Flex, Input, Upload } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    createPost,
+    uploadFile,
+    updatePost,
+    selectOneBoardData,
+} from '../../utils/slice/boardSlice';
+import { Flex, Input } from 'antd';
 import { FloatButton } from 'antd';
-import { InboxOutlined, EditOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 import { useCookies } from 'react-cookie';
-import { useNavigate } from 'react-router-dom';
+import { getPostById } from '../../utils/slice/boardSlice';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const { TextArea } = Input;
-const { Dragger } = Upload;
 
 export const EditPostPage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
+
     const [title, setTitle] = useState('');
     const [contents, setContents] = useState('');
     const [fileNames, setFileNames] = useState([]);
     const [cookies] = useCookies(['accessToken']);
-    const navigate = useNavigate();
+
+    const editData = useSelector(selectOneBoardData);
+
+    const { state } = location;
+    const postId = state ? state.postId : null;
+
+    useEffect(() => {
+        if (postId !== null && typeof postId === 'number') {
+            console.log(postId);
+            dispatch(getPostById({ accessToken: cookies.accessToken, id: postId })).then((res) => {
+                setTitle(editData?.title);
+                setContents(editData?.description);
+            });
+        }
+    }, [postId]);
+
+    useEffect(() => {
+        console.log(editData);
+    }, [editData]);
+
     const inputRef = useRef(null);
 
     const saveFileImage = (e) => {
@@ -79,13 +106,20 @@ export const EditPostPage = () => {
         <div>
             <Flex className="mx-16" vertical gap={32}>
                 <h1 className="text-4xl">Write</h1>
-                <Input placeholder="Title" showCount maxLength={30} onChange={handleTitleChange} />
+                <Input
+                    placeholder="Title"
+                    showCount
+                    maxLength={30}
+                    onChange={handleTitleChange}
+                    value={title}
+                />
                 <TextArea
                     showCount
                     maxLength={1000}
                     onChange={handleContentsChange}
                     placeholder="Contents"
                     className="h-72"
+                    value={contents}
                 />
                 <div className="flex">
                     <button className="text-lg" onClick={() => inputRef.current.click()}>
