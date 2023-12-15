@@ -11,9 +11,10 @@ const initialState = {
     status: '',
 };
 
-export const getAllComments = createAsyncThunk('comments/getAll', async (accessToken, thunkAPI) => {
+export const getAllComments = createAsyncThunk('comments/getAll', async (data, thunkAPI) => {
     try {
-        const res = await axios.get(`${SERVER_URL}/comments`, {
+        const { accessToken, id } = data;
+        const res = await axios.get(`${SERVER_URL}/comments/${id}`, {
             headers: {
                 authorization: 'Bearer ' + accessToken,
             },
@@ -140,5 +141,5 @@ export const commentSlice = createSlice({
             });
     },
 });
-export const selectBoardData = (state) => state.comments.commentsData;
+export const selectCommentsData = (state) => state.comments.commentsData;
 export default commentSlice.reducer;

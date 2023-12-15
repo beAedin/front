@@ -12,6 +12,7 @@ export const BoardPage = () => {
     const dispatch = useDispatch();
     const post = useSelector(selectBoardData);
     const [displayPost, setDisplayPost] = useState();
+    const [displayComment, setDisplayComment] = useState();
     const [cookies] = useCookies(['accessToken']);
 
     useEffect(() => {

@@ -7,7 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import { format } from 'date-fns';
 import Comment from '../../components/Comment';
-import { createComment } from '../../utils/slice/commentSlice';
+import { createComment, getAllComments } from '../../utils/slice/commentSlice';
+import { selectCommentsData } from '../../utils/slice/commentSlice';
 
 const { TextArea } = Input;
 export const BoardDetailPage = () => {
@@ -16,6 +17,7 @@ export const BoardDetailPage = () => {
 
     const dispatch = useDispatch();
     const post = useSelector(selectOneBoardData);
+    const comments = useSelector(selectCommentsData);
     const [cookies] = useCookies(['accessToken']);
 
     const handleContentsChange = (e) => {
@@ -48,6 +50,7 @@ export const BoardDetailPage = () => {
 
     useEffect(() => {
         dispatch(getPostById({ accessToken: cookies.accessToken, id: params.boardId }));
+        dispatch(getAllComments({ accessToken: cookies.accessToken, id: params.boardId }));
     }, []);
 
     useEffect(() => {
@@ -55,6 +58,10 @@ export const BoardDetailPage = () => {
         // console.log(post.currentUserId);
         console.log(post);
     }, [post]);
+
+    useEffect(() => {
+        console.log(comments);
+    }, [comments]);
 
     return (
         <div className=" h-5/6 px-10">
@@ -94,7 +101,7 @@ export const BoardDetailPage = () => {
                 </Button>
             </div>
 
-            <Comment></Comment>
+            {comments && comments.map((el, i) => <Comment key={i} data={el}></Comment>)}
         </div>
     );
 };
