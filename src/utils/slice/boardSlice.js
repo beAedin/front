@@ -7,6 +7,7 @@ const SERVER_URL = 'http://localhost:3000';
 const initialState = {
     error: '',
     boardData: [],
+    oneBoardData: [],
     errorMessage: '',
     accessToken: '',
     status: '',
@@ -31,14 +32,14 @@ export const getAllPost = createAsyncThunk('boards/getAll', async (accessToken, 
 export const getPostById = createAsyncThunk('boards/getOne', async (data, thunkAPI) => {
     try {
         const { id, accessToken } = data;
-        console.log(typeof id);
 
-        const res = await axios.get(`${SERVER_URL}/boards/${id}}`, {
+        const res = await axios.get(`${SERVER_URL}/boards/${id}`, {
             headers: {
                 authorization: 'Bearer ' + accessToken,
             },
             withCredentials: true,
         });
+
         return res;
     } catch (error) {
         return thunkAPI.rejectWithValue({
@@ -128,7 +129,7 @@ export const boardSlice = createSlice({
         initStatus: (state) => {
             state.status = '';
         },
-        initAccessToken: (state) => {
+        initBoardData: (state) => {
             state.accessToken = '';
         },
     },
@@ -151,7 +152,7 @@ export const boardSlice = createSlice({
             })
             .addCase(getPostById.fulfilled, (state, { payload }) => {
                 state.status = 'SUCCESS';
-                state.boardData = payload.data;
+                state.oneBoardData = payload.data;
             })
             .addCase(getPostById.rejected, (state, { payload }) => {
                 console.log(payload);
@@ -203,4 +204,7 @@ export const boardSlice = createSlice({
     },
 });
 export const selectBoardData = (state) => state.board.boardData;
+export const selectOneBoardData = (state) => state.board.oneBoardData;
+export const { initBoardData } = boardSlice.actions;
+
 export default boardSlice.reducer;

@@ -33,9 +33,11 @@ const Nav = () => {
                     <Link className=" py-2" to="/">
                         Home
                     </Link>
-                    <Link className=" py-2" to="/board">
-                        Board
-                    </Link>
+                    {isLogin && (
+                        <Link className=" py-2" to="/board">
+                            Board
+                        </Link>
+                    )}
                 </div>
                 <div className="flex gap-5">
                     {isLogin ? (

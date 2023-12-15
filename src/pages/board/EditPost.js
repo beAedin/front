@@ -14,7 +14,7 @@ export const EditPostPage = () => {
     const dispatch = useDispatch();
     const [title, setTitle] = useState('');
     const [contents, setContents] = useState('');
-    const [files, setFiles] = useState([]);
+    const [fileNames, setFileNames] = useState([]);
     const [cookies] = useCookies(['accessToken']);
     const navigate = useNavigate();
     const inputRef = useRef(null);
@@ -22,13 +22,13 @@ export const EditPostPage = () => {
     const saveFileImage = (e) => {
         try {
             let files = inputRef.current.files;
-            console.log(files);
             let formData = new FormData();
+            let names = [];
             for (let i = 0; i < files.length; i++) {
-                console.log(files[i]);
                 formData.append('files', files[i]);
+                names.push(files[i].name); // Collect file names
             }
-            // console.log(formData.getAll('files'));
+            setFileNames(names); // Update fileNames state with file names
             return formData;
         } catch (error) {
             // 이미지 업로드 실패
@@ -87,17 +87,25 @@ export const EditPostPage = () => {
                     placeholder="Contents"
                     className="h-72"
                 />
-                <button onClick={() => inputRef.current.click()}>
-                    업로드
-                    <input
-                        type="file"
-                        accept="image/jpg, image/jpeg, image/png"
-                        multiple
-                        ref={inputRef}
-                        onChange={saveFileImage}
-                        style={{ display: 'none' }}
-                    />
-                </button>
+                <div className="flex">
+                    <button className="text-lg" onClick={() => inputRef.current.click()}>
+                        Upload
+                        <input
+                            type="file"
+                            accept="image/jpg, image/jpeg, image/png"
+                            multiple
+                            ref={inputRef}
+                            onChange={saveFileImage}
+                            style={{ display: 'none' }}
+                        />
+                    </button>
+                </div>
+                {fileNames &&
+                    fileNames.map((el, i) => (
+                        <p className="text-left" key={i}>
+                            {el}
+                        </p>
+                    ))}
             </Flex>
             <FloatButton onClick={handlePost} icon={<EditOutlined />} tooltip={<div>Write</div>} />
         </div>

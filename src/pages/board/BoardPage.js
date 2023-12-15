@@ -6,6 +6,7 @@ import { getAllPost, selectBoardData } from '../../utils/slice/boardSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import { format } from 'date-fns';
+import { initBoardData } from '../../utils/slice/boardSlice';
 
 export const BoardPage = () => {
     const dispatch = useDispatch();
@@ -19,98 +20,6 @@ export const BoardPage = () => {
     useEffect(() => {
         console.log(post);
     }, [post]);
-
-    const [data, setData] = useState([
-        {
-            id: 1,
-            href: 'https://ant.design',
-            title: `ant design part`,
-            author: 'Kim',
-            content:
-                'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-        },
-        {
-            id: 1,
-            href: 'https://ant.design',
-            title: `ant design part`,
-            author: 'Kim',
-            content:
-                'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-        },
-        {
-            id: 1,
-            href: 'https://ant.design',
-            title: `ant design part`,
-            author: 'Kim',
-            content:
-                'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-        },
-        {
-            id: 1,
-            href: 'https://ant.design',
-            title: `ant design part`,
-            author: 'Kim',
-            content:
-                'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-        },
-        {
-            id: 1,
-            href: 'https://ant.design',
-            title: `ant design part`,
-            author: 'Kim',
-            content:
-                'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-        },
-        {
-            id: 1,
-            href: 'https://ant.design',
-            title: `ant design part`,
-            author: 'Kim',
-            content:
-                'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-        },
-        {
-            id: 1,
-            href: 'https://ant.design',
-            title: `ant design part`,
-            author: 'Kim',
-            content:
-                'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-        },
-        {
-            id: 1,
-            href: 'https://ant.design',
-            title: `ant design part`,
-            author: 'Kim',
-            content:
-                'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-        },
-        {
-            id: 1,
-            href: 'https://ant.design',
-            title: `ant design part`,
-            author: 'Kim',
-            content:
-                'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-        },
-        {
-            id: 1,
-            href: 'https://ant.design',
-            title: `ant design part`,
-            author: 'Kim',
-            content:
-                'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-        },
-        {
-            id: 1,
-            href: 'https://ant.design',
-            title: `ant design part`,
-            author: 'Kim',
-            content:
-                'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-        },
-        // 원하는 만큼 게시물 추가 가능
-    ]);
 
     return (
         <div>
@@ -132,29 +41,7 @@ export const BoardPage = () => {
                         }}
                         dataSource={post}
                         renderItem={(item) => (
-                            <List.Item
-                                className="bg-slate-50"
-                                key={item.title}
-                                actions={
-                                    [
-                                        // <IconText
-                                        //     icon={StarOutlined}
-                                        //     text="156"
-                                        //     key="list-vertical-star-o"
-                                        // />,
-                                        // <IconText
-                                        //     icon={LikeOutlined}
-                                        //     text="156"
-                                        //     key="list-vertical-like-o"
-                                        // />,
-                                        // <IconText
-                                        //     icon={MessageOutlined}
-                                        //     text="2"
-                                        //     key="list-vertical-message"
-                                        // />,
-                                    ]
-                                }
-                            >
+                            <List.Item className="bg-slate-50" key={item.title} actions={[]}>
                                 <List.Item.Meta
                                     // avatar={<Avatar src={item.avatar} />}
                                     title={
