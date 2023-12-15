@@ -66,11 +66,13 @@ export const updateComment = createAsyncThunk('comments/update', async (data, th
     }
 });
 
-export const deleteComment = createAsyncThunk('comments/delete', async (id, thunkAPI) => {
+export const deleteComment = createAsyncThunk('comments/delete', async (data, thunkAPI) => {
     try {
-        const res = await axios.delete(`${SERVER_URL}/comments/${id}}`, {
+        console.log(data);
+        const { accessToken, id } = data;
+        const res = await axios.delete(`${SERVER_URL}/comments/${id}`, {
             headers: {
-                //authorization: 'Bearer ' + accessToken,
+                authorization: 'Bearer ' + accessToken,
             },
             withCredentials: true,
         });
@@ -134,9 +136,11 @@ export const commentSlice = createSlice({
                 state.status = '';
             })
             .addCase(deleteComment.fulfilled, (state, { payload }) => {
+                console.log(payload);
                 state.status = 'SUCCESS';
             })
             .addCase(deleteComment.rejected, (state, { payload }) => {
+                console.log(payload);
                 state.status = 'ERROR';
             });
     },

@@ -18,6 +18,7 @@ export const BoardDetailPage = () => {
     const dispatch = useDispatch();
     const post = useSelector(selectOneBoardData);
     const comments = useSelector(selectCommentsData);
+    const [displayComments, setDisplayComments] = useState();
     const [cookies] = useCookies(['accessToken']);
 
     const handleContentsChange = (e) => {
@@ -63,6 +64,15 @@ export const BoardDetailPage = () => {
         console.log(comments);
     }, [comments]);
 
+    useEffect(() => {
+        if (comments.length > 0) {
+            const sortedData = [...comments].sort((a, b) => {
+                return new Date(b.updatedAt) - new Date(a.updatedAt);
+            });
+            setDisplayComments(sortedData);
+        }
+    }, [comments]);
+
     return (
         <div className=" h-5/6 px-10">
             <div className="relative bg-slate-100 h-4/6 mt-10 p-10">
@@ -101,7 +111,10 @@ export const BoardDetailPage = () => {
                 </Button>
             </div>
 
-            {comments && comments.map((el, i) => <Comment key={i} data={el}></Comment>)}
+            {displayComments &&
+                displayComments.map((el, i) => (
+                    <Comment key={i} data={el} currentUserId={post?.currentUserId}></Comment>
+                ))}
         </div>
     );
 };
