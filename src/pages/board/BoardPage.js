@@ -2,17 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { List, Space, FloatButton } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
-import { getAllPost } from '../../utils/slice/boardSlice';
-import { useDispatch } from 'react-redux';
+import { getAllPost, selectBoardData } from '../../utils/slice/boardSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 
 export const BoardPage = () => {
     const dispatch = useDispatch();
-    const [cookies, setCookie, removeCookie] = useCookies(['accessToken']);
+    const post = useSelector(selectBoardData);
+    const [cookies] = useCookies(['accessToken']);
 
     useEffect(() => {
         dispatch(getAllPost(cookies.accessToken));
     }, []);
+
+    useEffect(() => {
+        console.log(post);
+    }, [post]);
 
     const [data, setData] = useState([
         {
@@ -124,46 +129,43 @@ export const BoardPage = () => {
                             },
                             pageSize: 4,
                         }}
-                        dataSource={data}
+                        dataSource={post}
                         renderItem={(item) => (
                             <List.Item
                                 className="bg-slate-50"
                                 key={item.title}
-                                actions={
-                                    [
-                                        // <IconText
-                                        //     icon={StarOutlined}
-                                        //     text="156"
-                                        //     key="list-vertical-star-o"
-                                        // />,
-                                        // <IconText
-                                        //     icon={LikeOutlined}
-                                        //     text="156"
-                                        //     key="list-vertical-like-o"
-                                        // />,
-                                        // <IconText
-                                        //     icon={MessageOutlined}
-                                        //     text="2"
-                                        //     key="list-vertical-message"
-                                        // />,
-                                    ]
-                                }
-                                // extra={
-                                //     <img
-                                //         width={272}
-                                //         alt="logo"
-                                //         src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                                //     />
-                                // }
+                                actions={[
+                                    <p>시간입니다</p>,
+                                    // <IconText
+                                    //     icon={StarOutlined}
+                                    //     text="156"
+                                    //     key="list-vertical-star-o"
+                                    // />,
+                                    // <IconText
+                                    //     icon={LikeOutlined}
+                                    //     text="156"
+                                    //     key="list-vertical-like-o"
+                                    // />,
+                                    // <IconText
+                                    //     icon={MessageOutlined}
+                                    //     text="2"
+                                    //     key="list-vertical-message"
+                                    // />,
+                                ]}
                             >
                                 <List.Item.Meta
                                     // avatar={<Avatar src={item.avatar} />}
-                                    title={<Link to={item.href}>{item.title}</Link>}
+                                    title={
+                                        <Link to={`/board/${item.id}`}>
+                                            <h1 className=" font-bold">{item.title}</h1>
+                                        </Link>
+                                    }
                                     description={
                                         <div className="flex justify-end">{item.author}</div>
                                     }
                                 />
-                                {item.content}
+
+                                {<p>{item.description}</p>}
                             </List.Item>
                         )}
                     />

@@ -6,7 +6,7 @@ const SERVER_URL = 'http://localhost:3000';
 
 const initialState = {
     error: '',
-    boardData: {},
+    boardData: [],
     errorMessage: '',
     accessToken: '',
     status: '',
@@ -20,7 +20,6 @@ export const getAllPost = createAsyncThunk('boards/getAll', async (accessToken, 
             },
             withCredentials: true,
         });
-        console.log(res);
         return res;
     } catch (error) {
         return thunkAPI.rejectWithValue({
@@ -29,9 +28,17 @@ export const getAllPost = createAsyncThunk('boards/getAll', async (accessToken, 
     }
 });
 
-export const getPostById = createAsyncThunk('boards/getOne', async (id, thunkAPI) => {
+export const getPostById = createAsyncThunk('boards/getOne', async (data, thunkAPI) => {
     try {
-        const res = await axios.get(`${SERVER_URL}/boards/${id}}`);
+        const { id, accessToken } = data;
+        console.log(typeof id);
+
+        const res = await axios.get(`${SERVER_URL}/boards/${id}}`, {
+            headers: {
+                authorization: 'Bearer ' + accessToken,
+            },
+            withCredentials: true,
+        });
         return res;
     } catch (error) {
         return thunkAPI.rejectWithValue({
@@ -114,8 +121,8 @@ export const uploadFile = createAsyncThunk('boards/file', async (data, thunkAPI)
     }
 });
 
-export const authSlice = createSlice({
-    name: 'auth',
+export const boardSlice = createSlice({
+    name: 'board',
     initialState,
     reducers: {
         initStatus: (state) => {
@@ -133,8 +140,7 @@ export const authSlice = createSlice({
             })
             .addCase(getAllPost.fulfilled, (state, { payload }) => {
                 state.status = 'SUCCESS';
-                state.authData = payload.data;
-                state.accessToken = payload.data.accessToken;
+                state.boardData = payload.data;
             })
             .addCase(getAllPost.rejected, (state, { payload }) => {
                 state.status = 'ERROR';
@@ -145,9 +151,10 @@ export const authSlice = createSlice({
             })
             .addCase(getPostById.fulfilled, (state, { payload }) => {
                 state.status = 'SUCCESS';
-                state.authData = payload.data;
+                state.boardData = payload.data;
             })
             .addCase(getPostById.rejected, (state, { payload }) => {
+                console.log(payload);
                 state.status = 'ERROR';
             })
             // create Post
@@ -156,7 +163,6 @@ export const authSlice = createSlice({
             })
             .addCase(createPost.fulfilled, (state, { payload }) => {
                 state.status = 'SUCCESS';
-                state.authData = payload.data;
             })
             .addCase(createPost.rejected, (state, { payload }) => {
                 console.log(payload);
@@ -168,7 +174,6 @@ export const authSlice = createSlice({
             })
             .addCase(updatePost.fulfilled, (state, { payload }) => {
                 state.status = 'SUCCESS';
-                state.authData = payload.data;
             })
             .addCase(updatePost.rejected, (state, { payload }) => {
                 state.status = 'ERROR';
@@ -179,7 +184,6 @@ export const authSlice = createSlice({
             })
             .addCase(deletePost.fulfilled, (state, { payload }) => {
                 state.status = 'SUCCESS';
-                state.authData = payload.data;
             })
             .addCase(deletePost.rejected, (state, { payload }) => {
                 state.status = 'ERROR';
@@ -192,12 +196,11 @@ export const authSlice = createSlice({
                 console.log('승공');
                 console.log(payload);
                 state.status = 'SUCCESS';
-                state.authData = payload.data;
             })
             .addCase(uploadFile.rejected, (state, { payload }) => {
                 state.status = 'ERROR';
             });
     },
 });
-
-export default authSlice.reducer;
+export const selectBoardData = (state) => state.board.boardData;
+export default boardSlice.reducer;
