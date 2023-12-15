@@ -90,9 +90,11 @@ export const deletePost = createAsyncThunk('boards/delete', async (id, thunkAPI)
 
 export const uploadFile = createAsyncThunk('boards/file', async (data, thunkAPI) => {
     try {
-        const res = await axios.post(`${SERVER_URL}/boards/upload`, data, {
+        const { accessToken, file } = data;
+        console.log(data);
+        const res = await axios.post(`${SERVER_URL}/boards/upload`, file, {
             headers: {
-                // authorization: 'Bearer ' + accessToken,
+                authorization: 'Bearer ' + accessToken,
             },
             withCredentials: true,
         });
@@ -136,7 +138,6 @@ export const authSlice = createSlice({
             .addCase(getPostById.fulfilled, (state, { payload }) => {
                 state.status = 'SUCCESS';
                 state.authData = payload.data;
-                state.accessToken = payload.data.accessToken;
             })
             .addCase(getPostById.rejected, (state, { payload }) => {
                 state.status = 'ERROR';
@@ -161,7 +162,6 @@ export const authSlice = createSlice({
             .addCase(updatePost.fulfilled, (state, { payload }) => {
                 state.status = 'SUCCESS';
                 state.authData = payload.data;
-                state.accessToken = payload.data.accessToken;
             })
             .addCase(updatePost.rejected, (state, { payload }) => {
                 state.status = 'ERROR';
@@ -173,7 +173,6 @@ export const authSlice = createSlice({
             .addCase(deletePost.fulfilled, (state, { payload }) => {
                 state.status = 'SUCCESS';
                 state.authData = payload.data;
-                state.accessToken = payload.data.accessToken;
             })
             .addCase(deletePost.rejected, (state, { payload }) => {
                 state.status = 'ERROR';
@@ -183,9 +182,10 @@ export const authSlice = createSlice({
                 state.status = '';
             })
             .addCase(uploadFile.fulfilled, (state, { payload }) => {
+                console.log('승공');
+                console.log(payload);
                 state.status = 'SUCCESS';
                 state.authData = payload.data;
-                state.accessToken = payload.data.accessToken;
             })
             .addCase(uploadFile.rejected, (state, { payload }) => {
                 state.status = 'ERROR';

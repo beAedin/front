@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { createPost } from '../../utils/slice/boardSlice';
+import { createPost, uploadFile } from '../../utils/slice/boardSlice';
 import { message, Flex, Input, Upload } from 'antd';
 import { FloatButton } from 'antd';
 import { InboxOutlined, EditOutlined } from '@ant-design/icons';
 import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
 
 const { TextArea } = Input;
 const { Dragger } = Upload;
@@ -15,7 +16,7 @@ export const EditPostPage = () => {
     const [contents, setContents] = useState('');
     const [files, setFiles] = useState([]);
     const [cookies] = useCookies(['accessToken']);
-    // cookies.accessToken
+    const navigate = useNavigate();
 
     const props = {
         name: 'file',
@@ -38,8 +39,24 @@ export const EditPostPage = () => {
     };
 
     const handlePost = (e) => {
-        dispatch(createPost({ accessToken: cookies.accessToken, title, description: contents }));
-        // 만약 파일 있으면
+        dispatch(createPost({ accessToken: cookies.accessToken, title, description: contents }))
+            .then((res) => {
+                // 만약 파일 있으면=
+                if (files.length > 0) {
+                    dispatch(uploadFile({ accessToken: cookies.accessToken, file: files }))
+                        .then((res) => {
+                            navigate('/board');
+                        })
+                        .catch((err) => {
+                            console.error(err);
+                        });
+                } else {
+                    navigate('/board');
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     };
 
     return (
@@ -66,12 +83,7 @@ export const EditPostPage = () => {
                     </p>
                 </Dragger>
             </Flex>
-            <FloatButton
-                onClick={handlePost}
-                icon={<EditOutlined />}
-                // href="/board"
-                tooltip={<div>Write</div>}
-            />
+            <FloatButton onClick={handlePost} icon={<EditOutlined />} tooltip={<div>Write</div>} />
         </div>
     );
 };
