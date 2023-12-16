@@ -104,8 +104,8 @@ export const BoardDetailPage = () => {
             </div>
 
             <h1 className="text-left text-2xl mt-10 mb-6 mx-4 text-stone-600">
-                <span className="text-3xl font-semibold text-black">Comment</span> (
-                {displayComments.length})
+                <span className="text-3xl font-semibold text-black">Comment</span>{' '}
+                {displayComments ? `(${displayComments.length})` : '(0)'}
             </h1>
             <TextArea
                 rows={4}
