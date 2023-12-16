@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { Button, Input } from 'antd';
+import { CloseOutlined, EditOutlined } from '@ant-design/icons';
 import { useCookies } from 'react-cookie';
 import { useDispatch } from 'react-redux';
 import {
@@ -17,6 +18,7 @@ const Comment = (props) => {
     const dispatch = useDispatch();
     const [commentInput, setCommentInput] = useState();
     const [editMode, setEditMode] = useState();
+    console.log(props.data);
 
     const handleContentsChange = (e) => {
         setCommentInput(e.target.value);
@@ -54,20 +56,16 @@ const Comment = (props) => {
     };
 
     return (
-        <div className="relative bg-slate-300 h-40 flex flex-col p-5 mb-2">
+        <div className="relative bg-stone-100 h-48 flex flex-col p-5 mb-2">
             {props?.currentUserId === props.data?.userId && !editMode && (
                 <div className="absolute top-4 right-4">
-                    <Button onClick={onUpdateComment} className="mr-3">
-                        Edit
-                    </Button>
-                    <Button onClick={onDeleteComment} danger>
-                        Delete
-                    </Button>
+                    <EditOutlined onClick={onUpdateComment} className="mr-3 text-green-700" />
+                    <CloseOutlined className="text-red-600" onClick={onDeleteComment} />
                 </div>
             )}
             {editMode && (
                 <div className="absolute top-4 right-4">
-                    <Button onClick={onCompleteUpdateComment} className="mr-3">
+                    <Button onClick={onCompleteUpdateComment} type="link" className="mr-3">
                         Comment
                     </Button>
                 </div>
@@ -87,7 +85,7 @@ const Comment = (props) => {
             ) : (
                 <div className="relative h-full">
                     <p className="text-left mt-4">{props.data?.content}</p>
-                    <p className="absolute bottom-0 right-0 text-right">
+                    <p className="absolute bottom-0 right-0 text-right text-stone-700">
                         {format(new Date(props.data?.updatedAt), 'yyyy-MM-dd HH:mm:ss')}
                     </p>
                 </div>

@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 export const HomePage = () => {
     return (
         <div>
-            <main className="flex justify-center pt-4">
-                <img src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg"></img>
+            <main className="flex justify-center pt-4 mt-10">
+                <img src="https://img4.daumcdn.net/thumb/R658x0.q70/?fname=https://t1.daumcdn.net/news/202301/17/bemypet/20230117160023666ujuo.jpg"></img>
             </main>
-            <h1 className="text-3xl mt-10">야옹야옹, 야옹</h1>
+            <h1 className="text-3xl mt-10">저는 강아지입니다</h1>
         </div>
     );
 };

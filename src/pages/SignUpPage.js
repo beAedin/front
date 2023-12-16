@@ -45,17 +45,20 @@ export const SignUpPage = () => {
     }, [status]);
 
     return (
-        <div className="w-full max-w-sm mx-auto">
+        <div className="w-full max-w-md mx-auto h-full">
             <form
-                className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-20"
+                className="relative bg-white shadow-zinc-300 shadow-md rounded px-12 pt-6 pb-8 mb-4 mt-20 h-3/5"
                 onSubmit={handleSubmit}
             >
-                <h2 className="text-2xl mb-6">회원가입 페이지</h2>
+                <h2 className="text-4xl font-semibold mb-14">Sign Up</h2>
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                    <label
+                        className="text-left block text-gray-900 text-sm font-bold mb-10"
+                        htmlFor="email"
+                    >
                         e-mail
                         <input
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mt-2"
                             id="email"
                             type="email"
                             name="email"
@@ -66,12 +69,12 @@ export const SignUpPage = () => {
                 </div>
                 <div className="mb-6">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="text-left block text-gray-900 text-sm font-bold mb-2"
                         htmlFor="password"
                     >
                         password
                         <input
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mt-2"
                             id="password"
                             type="password"
                             name="password"
@@ -80,12 +83,12 @@ export const SignUpPage = () => {
                         />
                     </label>
                 </div>
-                <div className="flex items-center justify-center ">
+                <div className="flex items-center justify-center">
                     <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-stone-600 hover:bg-stone-700 text-white font-bold py-2 px-5 rounded focus:outline-none focus:shadow-outline absolute bottom-7 "
                         type="submit"
                     >
-                        가입하기
+                        Register
                     </button>
                 </div>
             </form>

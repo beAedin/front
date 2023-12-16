@@ -72,23 +72,25 @@ export const BoardDetailPage = () => {
     useEffect(() => {
         if (comments.length > 0) {
             const sortedData = [...comments].sort((a, b) => {
-                return new Date(b.updatedAt) - new Date(a.updatedAt);
+                return new Date(b.createdAt) - new Date(a.createdAt);
             });
             setDisplayComments(sortedData);
         }
     }, [comments]);
 
     return (
-        <div className=" h-5/6 px-10">
-            <div className="relative bg-slate-100 h-4/6 mt-10 p-10">
-                <h1 className="text-4xl">{post?.title}</h1>
-                <p className="text-right">{post?.user?.email}</p>
+        <div className="h-full px-10">
+            <div className="relative bg-stone-100 h-full md:h-5/6 lg:h-4/6 mt-10 p-10">
+                <h1 className="text-4xl font-semibold">{post?.title}</h1>
+                <p className="text-right text-stone-700">{post?.user?.email}</p>
                 {post.updatedAt && (
-                    <p className="text-right">
+                    <p className="text-right text-stone-700">
                         {format(new Date(post.updatedAt), 'yyyy-MM-dd HH:mm:ss')}
                     </p>
                 )}
-                <p className="mt-12 text-xl text-stone-800">{post?.description}</p>
+                <p className="mt-12 text-sm sm:text-base text-stone-800 break-words">
+                    {post?.description}
+                </p>
                 {post?.currentUserEmail === post.user?.email && (
                     <div className="absolute bottom-5 right-5 ">
                         <Button onClick={onUpdateBoard} className="mr-3">
@@ -101,7 +103,10 @@ export const BoardDetailPage = () => {
                 )}
             </div>
 
-            <h1 className="text-left text-3xl mt-10 mb-6 mx-4">Comment</h1>
+            <h1 className="text-left text-2xl mt-10 mb-6 mx-4 text-stone-600">
+                <span className="text-3xl font-semibold text-black">Comment</span> (
+                {displayComments.length})
+            </h1>
             <TextArea
                 rows={4}
                 maxLength={300}

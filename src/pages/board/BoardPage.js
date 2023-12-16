@@ -30,14 +30,13 @@ export const BoardPage = () => {
 
     return (
         <div>
+            <div className=" w-full h-20 mt-3 flex px-16 items-center">
+                <h1 className="text-3xl font-semibold">Board</h1>
+            </div>
             <div className="">
                 <ul>
-                    {/* {posts.map((post, i) => ( */}
-                    {/* <Link key={i} to={`board/${post.id}`}>
-                        {post.title}
-                    </Link> */}
                     <List
-                        className="mt-10"
+                        className=""
                         itemLayout="vertical"
                         size="large"
                         pagination={{
@@ -48,12 +47,16 @@ export const BoardPage = () => {
                         }}
                         dataSource={displayPost}
                         renderItem={(item) => (
-                            <List.Item className="bg-slate-50" key={item.title} actions={[]}>
+                            <List.Item
+                                className="bg-slate-50 hover:bg-slate-100"
+                                key={item.id}
+                                actions={[]}
+                            >
                                 <List.Item.Meta
                                     // avatar={<Avatar src={item.avatar} />}
                                     title={
                                         <Link to={`/board/${item.id}`}>
-                                            <h1 className=" font-bold">{item.title}</h1>
+                                            <h1 className="mt-3 font-bold">{item.title}</h1>
                                         </Link>
                                     }
                                     description={
@@ -69,7 +72,11 @@ export const BoardPage = () => {
                                     }
                                 />
 
-                                {<p className="mb-16">{item.description}</p>}
+                                {
+                                    <p className="mb-16 overflow-hidden whitespace-nowrap overflow-ellipsis">
+                                        {item.description}
+                                    </p>
+                                }
                             </List.Item>
                         )}
                     />
