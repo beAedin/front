@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { List, Space, FloatButton } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
-import { getAllPost, selectBoardData } from '../../utils/slice/boardSlice';
+import { getAllPost, selectBoardData, initOneBoardData } from '../../utils/slice/boardSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import { format } from 'date-fns';
@@ -17,6 +17,7 @@ export const BoardPage = () => {
     useEffect(() => {
         dispatch(getAllPost(cookies.accessToken)).then((res) => {});
         dispatch(initCommentsData());
+        dispatch(initOneBoardData());
     }, []);
 
     useEffect(() => {

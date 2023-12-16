@@ -142,8 +142,8 @@ export const boardSlice = createSlice({
         initBoardData: (state) => {
             state.accessToken = '';
         },
-        initCreatedBoardId: (state) => {
-            state.createdBoardId = 0;
+        initOneBoardData: (state) => {
+            state.oneBoardData = 0;
         },
     },
     extraReducers: (builder) => {
@@ -217,6 +217,6 @@ export const boardSlice = createSlice({
 export const selectBoardData = (state) => state.board.boardData;
 export const selectOneBoardData = (state) => state.board.oneBoardData;
 export const selectCreatedBoardId = (state) => state.board.createdBoardId;
-export const { initBoardData, initCreatedBoardId } = boardSlice.actions;
+export const { initBoardData, initOneBoardData } = boardSlice.actions;
 
 export default boardSlice.reducer;

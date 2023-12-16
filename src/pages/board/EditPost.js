@@ -6,7 +6,6 @@ import {
     updatePost,
     selectOneBoardData,
     selectCreatedBoardId,
-    initCreatedBoardId,
 } from '../../utils/slice/boardSlice';
 import { Flex, Input } from 'antd';
 import { FloatButton } from 'antd';
@@ -136,10 +135,7 @@ export const EditPostPage = () => {
                             id: res.data.id,
                         };
                         console.log('흑흑흑');
-
                         formData.append('data', JSON.stringify(dataSet)); // JSON 형식으로 파싱 후 추가
-
-                        dispatch(initCreatedBoardId());
 
                         dispatch(uploadFile({ formData }))
                             .then((res) => {
@@ -152,7 +148,6 @@ export const EditPostPage = () => {
                     } else {
                         //console.log('업로드할게없음');
                         navigate('/board');
-                        dispatch(initCreatedBoardId());
                     }
                     //}
                 })
