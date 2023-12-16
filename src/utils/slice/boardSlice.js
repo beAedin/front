@@ -51,7 +51,7 @@ export const getPostById = createAsyncThunk('boards/getOne', async (data, thunkA
 export const createPost = createAsyncThunk('boards/post', async (data, thunkAPI) => {
     try {
         const { title, description, accessToken } = data;
-        console.log(accessToken);
+
         const res = await axios.post(
             `${SERVER_URL}/boards`,
             { title, description },
@@ -113,7 +113,9 @@ export const uploadFile = createAsyncThunk('boards/file', async (data, thunkAPI)
         const dataSet = JSON.parse(data.formData.get('data')); // 'data' 키로 추가한 정보를 꺼냅니다
         const { accessToken } = dataSet;
 
-        const res = await axios.post(`${SERVER_URL}/boards/upload`, data, {
+        const file = data.formData.get('files');
+
+        const res = await axios.post(`${SERVER_URL}/boards/upload`, file, {
             headers: {
                 authorization: 'Bearer ' + accessToken,
                 'Content-Type': 'multipart/form-data',
@@ -157,12 +159,10 @@ export const boardSlice = createSlice({
                 state.status = '';
             })
             .addCase(getPostById.fulfilled, (state, { payload }) => {
-                console.log(payload.headers);
                 state.status = 'SUCCESS';
                 state.oneBoardData = payload.data;
             })
             .addCase(getPostById.rejected, (state, { payload }) => {
-                console.log(payload);
                 state.status = 'ERROR';
             })
             // create Post
@@ -173,7 +173,6 @@ export const boardSlice = createSlice({
                 state.status = 'SUCCESS';
             })
             .addCase(createPost.rejected, (state, { payload }) => {
-                console.log(payload);
                 state.status = 'ERROR';
             })
             // update Post
@@ -201,8 +200,6 @@ export const boardSlice = createSlice({
                 state.status = '';
             })
             .addCase(uploadFile.fulfilled, (state, { payload }) => {
-                console.log('승공');
-                console.log(payload);
                 state.status = 'SUCCESS';
             })
             .addCase(uploadFile.rejected, (state, { payload }) => {

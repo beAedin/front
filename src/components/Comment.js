@@ -18,7 +18,7 @@ const Comment = (props) => {
     const dispatch = useDispatch();
     const [commentInput, setCommentInput] = useState();
     const [editMode, setEditMode] = useState();
-    console.log(props.data);
+    // console.log(props.data);
 
     const handleContentsChange = (e) => {
         setCommentInput(e.target.value);
@@ -39,7 +39,6 @@ const Comment = (props) => {
                 boardId: props.data?.boardId,
             })
         ).then((res) => {
-            console.log(res);
             dispatch(initCommentsData());
         });
     };

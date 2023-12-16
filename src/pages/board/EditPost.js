@@ -32,7 +32,6 @@ export const EditPostPage = () => {
 
     useEffect(() => {
         if (postId !== null && typeof postId === 'number') {
-            console.log(postId);
             dispatch(getPostById({ accessToken: cookies.accessToken, id: postId })).then((res) => {
                 setTitle(editData?.title);
                 setContents(editData?.description);
@@ -95,7 +94,7 @@ export const EditPostPage = () => {
 
                         dispatch(uploadFile({ formData }))
                             .then((res) => {
-                                console.log('성공', res);
+                                // console.log('성공', res);
                                 navigate('/board');
                             })
                             .catch((err) => {
@@ -115,7 +114,7 @@ export const EditPostPage = () => {
                     // 만약 파일 있으면=
 
                     const formData = saveFileImage(inputRef.current);
-                    console.log(formData);
+                    // console.log(formData);
                     if (formData) {
                         let dataSet = {
                             accessToken: cookies.accessToken,
@@ -125,14 +124,14 @@ export const EditPostPage = () => {
 
                         dispatch(uploadFile({ formData }))
                             .then((res) => {
-                                console.log('성공', res);
+                                //console.log('성공', res);
                                 navigate('/board');
                             })
                             .catch((err) => {
                                 console.error(err);
                             });
                     } else {
-                        console.log('업로드할게없음');
+                        //console.log('업로드할게없음');
                         navigate('/board');
                     }
                 })

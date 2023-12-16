@@ -24,8 +24,6 @@ export const SignUpPage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // 여기서 회원가입 로직을 구현하거나 서버로 데이터를 전송할 수 있습니다.
-        console.log(formData); // 예시로 콘솔에 출력
         if (formData.password.length < 4) {
             window.alert('비밀번호가 너무 짧습니다');
             return;

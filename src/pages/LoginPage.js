@@ -45,8 +45,6 @@ export const LoginPage = () => {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        console.log('Email:', email);
-        console.log('Password:', password);
         if (password.length < 4) {
             window.alert('비밀번호가 너무 짧습니다');
             return;

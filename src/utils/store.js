@@ -11,4 +11,5 @@ export const store = configureStore({
         board: boardReducer,
         comments: commentReducer,
     },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
 });

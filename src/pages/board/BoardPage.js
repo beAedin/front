@@ -40,9 +40,7 @@ export const BoardPage = () => {
                         itemLayout="vertical"
                         size="large"
                         pagination={{
-                            onChange: (page) => {
-                                console.log(page);
-                            },
+                            onChange: (page) => {},
                             pageSize: 3,
                         }}
                         dataSource={displayPost}
