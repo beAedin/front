@@ -72,12 +72,17 @@ export const createPost = createAsyncThunk('boards/post', async (data, thunkAPI)
 
 export const updatePost = createAsyncThunk('boards/update', async (data, thunkAPI) => {
     try {
-        const res = await axios.put(`${SERVER_URL}/boards/:id}`, data, {
-            headers: {
-                //authorization: 'Bearer ' + accessToken,
-            },
-            withCredentials: true,
-        });
+        const { title, description, accessToken, id } = data;
+        const res = await axios.put(
+            `${SERVER_URL}/boards/${id}`,
+            { title, description },
+            {
+                headers: {
+                    authorization: 'Bearer ' + accessToken,
+                },
+                withCredentials: true,
+            }
+        );
         return res;
     } catch (error) {
         return thunkAPI.rejectWithValue({
@@ -152,6 +157,7 @@ export const boardSlice = createSlice({
                 state.status = '';
             })
             .addCase(getPostById.fulfilled, (state, { payload }) => {
+                console.log(payload.headers);
                 state.status = 'SUCCESS';
                 state.oneBoardData = payload.data;
             })

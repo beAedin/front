@@ -55,7 +55,13 @@ export const BoardDetailPage = () => {
                 accessToken: cookies.accessToken,
                 id: post.id,
             })
-        );
+        )
+            .then((res) => {
+                navigate('/board');
+            })
+            .catch((err) => {
+                console.error(err);
+            });
     };
 
     useEffect(() => {

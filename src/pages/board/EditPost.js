@@ -72,34 +72,70 @@ export const EditPostPage = () => {
 
     const handlePost = async (e) => {
         e.preventDefault();
-        dispatch(createPost({ accessToken: cookies.accessToken, title, description: contents }))
-            .then(async (res) => {
-                // 만약 파일 있으면=
 
-                const formData = saveFileImage(inputRef.current);
-                console.log(formData.getAll('files'));
-                if (formData) {
-                    let dataSet = {
-                        accessToken: cookies.accessToken,
-                    };
+        if (postId !== null && typeof postId === 'number') {
+            dispatch(
+                updatePost({
+                    accessToken: cookies.accessToken,
+                    title,
+                    description: contents,
+                    id: postId,
+                })
+            )
+                .then((res) => {
+                    const formData = saveFileImage(inputRef.current);
+                    if (formData) {
+                        let dataSet = {
+                            accessToken: cookies.accessToken,
+                        };
 
-                    formData.append('data', JSON.stringify(dataSet)); // JSON 형식으로 파싱 후 추가
+                        formData.append('data', JSON.stringify(dataSet)); // JSON 형식으로 파싱 후 추가
 
-                    dispatch(uploadFile({ formData }))
-                        .then((res) => {
-                            console.log('성공', res);
-                            navigate('/board');
-                        })
-                        .catch((err) => {
-                            console.error(err);
-                        });
-                } else {
-                    navigate('/board');
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+                        dispatch(uploadFile({ formData }))
+                            .then((res) => {
+                                console.log('성공', res);
+                                navigate('/board');
+                            })
+                            .catch((err) => {
+                                console.error(err);
+                            });
+                    } else {
+                        navigate('/board');
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        } else {
+            // create인지 edit 인지
+            dispatch(createPost({ accessToken: cookies.accessToken, title, description: contents }))
+                .then(async (res) => {
+                    // 만약 파일 있으면=
+
+                    const formData = saveFileImage(inputRef.current);
+                    if (formData) {
+                        let dataSet = {
+                            accessToken: cookies.accessToken,
+                        };
+
+                        formData.append('data', JSON.stringify(dataSet)); // JSON 형식으로 파싱 후 추가
+
+                        dispatch(uploadFile({ formData }))
+                            .then((res) => {
+                                console.log('성공', res);
+                                navigate('/board');
+                            })
+                            .catch((err) => {
+                                console.error(err);
+                            });
+                    } else {
+                        navigate('/board');
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
     };
 
     return (
