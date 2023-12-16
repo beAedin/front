@@ -30,6 +30,10 @@ const Comment = (props) => {
     };
 
     const onCompleteUpdateComment = () => {
+        if (commentInput.length < 1) {
+            window.alert('댓글을 입력하세요');
+            return;
+        }
         setEditMode(false);
         dispatch(
             updateComment({

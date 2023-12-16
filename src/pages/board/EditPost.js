@@ -5,6 +5,8 @@ import {
     uploadFile,
     updatePost,
     selectOneBoardData,
+    selectCreatedBoardId,
+    initCreatedBoardId,
 } from '../../utils/slice/boardSlice';
 import { Flex, Input } from 'antd';
 import { FloatButton } from 'antd';
@@ -26,6 +28,7 @@ export const EditPostPage = () => {
     const [cookies] = useCookies(['accessToken']);
 
     const editData = useSelector(selectOneBoardData);
+    const createdBoardId = useSelector(selectCreatedBoardId);
 
     const { state } = location;
     const postId = state ? state.postId : null;
@@ -73,7 +76,17 @@ export const EditPostPage = () => {
 
     const handlePost = async (e) => {
         e.preventDefault();
+        if (title.length < 1) {
+            window.alert('제목을 입력하세요');
+            return;
+        }
 
+        if (contents.length < 1) {
+            window.alert('본문을 입력하세요');
+            return;
+        }
+
+        // EDIT
         if (postId !== null && typeof postId === 'number') {
             dispatch(
                 updatePost({
@@ -88,6 +101,7 @@ export const EditPostPage = () => {
                     if (formData) {
                         let dataSet = {
                             accessToken: cookies.accessToken,
+                            id: postId,
                         };
 
                         formData.append('data', JSON.stringify(dataSet)); // JSON 형식으로 파싱 후 추가
@@ -108,19 +122,24 @@ export const EditPostPage = () => {
                     console.error(error);
                 });
         } else {
-            // create인지 edit 인지
+            // CREATE
+            // dispatch(createPost({ accessToken: cookies.accessToken, title, description: contents })).unwrap()
             dispatch(createPost({ accessToken: cookies.accessToken, title, description: contents }))
+                .unwrap()
                 .then(async (res) => {
-                    // 만약 파일 있으면=
-
+                    console.log(res.data.id);
                     const formData = saveFileImage(inputRef.current);
-                    // console.log(formData);
+
                     if (formData) {
                         let dataSet = {
                             accessToken: cookies.accessToken,
+                            id: res.data.id,
                         };
+                        console.log('흑흑흑');
 
                         formData.append('data', JSON.stringify(dataSet)); // JSON 형식으로 파싱 후 추가
+
+                        dispatch(initCreatedBoardId());
 
                         dispatch(uploadFile({ formData }))
                             .then((res) => {
@@ -133,7 +152,9 @@ export const EditPostPage = () => {
                     } else {
                         //console.log('업로드할게없음');
                         navigate('/board');
+                        dispatch(initCreatedBoardId());
                     }
+                    //}
                 })
                 .catch((error) => {
                     console.error(error);

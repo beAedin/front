@@ -27,6 +27,10 @@ export const BoardDetailPage = () => {
     };
 
     const onSubmitComment = () => {
+        if (commentInput.length < 1) {
+            window.alert('댓글을 입력하세요');
+            return;
+        }
         dispatch(
             createComment({
                 accessToken: cookies.accessToken,

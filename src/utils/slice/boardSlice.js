@@ -11,6 +11,7 @@ const initialState = {
     errorMessage: '',
     accessToken: '',
     status: '',
+    createdBoardId: 0,
 };
 
 export const getAllPost = createAsyncThunk('boards/getAll', async (accessToken, thunkAPI) => {
@@ -111,11 +112,12 @@ export const deletePost = createAsyncThunk('boards/delete', async (data, thunkAP
 export const uploadFile = createAsyncThunk('boards/file', async (data, thunkAPI) => {
     try {
         const dataSet = JSON.parse(data.formData.get('data')); // 'data' 키로 추가한 정보를 꺼냅니다
-        const { accessToken } = dataSet;
+        const { accessToken, id } = dataSet;
+        console.log(dataSet);
 
         const file = data.formData.get('files');
 
-        const res = await axios.post(`${SERVER_URL}/boards/upload`, file, {
+        const res = await axios.post(`${SERVER_URL}/boards/upload/${id}`, file, {
             headers: {
                 authorization: 'Bearer ' + accessToken,
                 'Content-Type': 'multipart/form-data',
@@ -139,6 +141,9 @@ export const boardSlice = createSlice({
         },
         initBoardData: (state) => {
             state.accessToken = '';
+        },
+        initCreatedBoardId: (state) => {
+            state.createdBoardId = 0;
         },
     },
     extraReducers: (builder) => {
@@ -171,6 +176,8 @@ export const boardSlice = createSlice({
             })
             .addCase(createPost.fulfilled, (state, { payload }) => {
                 state.status = 'SUCCESS';
+                //state.createdBoardId = payload.data.id;
+                console.log(payload.data.id);
             })
             .addCase(createPost.rejected, (state, { payload }) => {
                 state.status = 'ERROR';
@@ -209,6 +216,7 @@ export const boardSlice = createSlice({
 });
 export const selectBoardData = (state) => state.board.boardData;
 export const selectOneBoardData = (state) => state.board.oneBoardData;
-export const { initBoardData } = boardSlice.actions;
+export const selectCreatedBoardId = (state) => state.board.createdBoardId;
+export const { initBoardData, initCreatedBoardId } = boardSlice.actions;
 
 export default boardSlice.reducer;
