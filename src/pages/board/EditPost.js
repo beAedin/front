@@ -40,10 +40,6 @@ export const EditPostPage = () => {
         }
     }, [postId]);
 
-    useEffect(() => {
-        console.log(editData);
-    }, [editData]);
-
     const inputRef = useRef(null);
 
     const saveFileImage = (e) => {
@@ -51,14 +47,20 @@ export const EditPostPage = () => {
             let files = inputRef.current.files;
             let formData = new FormData();
             let names = [];
-            for (let i = 0; i < files.length; i++) {
-                formData.append('files', files[i]);
-                names.push(files[i].name); // Collect file names
+            if (files.length > 0) {
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('files', files[i]);
+                    names.push(files[i].name); // Collect file names
+                }
+                setFileNames(names); // Update fileNames state with file names
+                return formData;
+            } else {
+                // No files selected
+                return undefined;
             }
-            setFileNames(names); // Update fileNames state with file names
-            return formData;
         } catch (error) {
             // 이미지 업로드 실패
+            return undefined;
         }
     };
 
@@ -113,6 +115,7 @@ export const EditPostPage = () => {
                     // 만약 파일 있으면=
 
                     const formData = saveFileImage(inputRef.current);
+                    console.log(formData);
                     if (formData) {
                         let dataSet = {
                             accessToken: cookies.accessToken,
@@ -129,6 +132,7 @@ export const EditPostPage = () => {
                                 console.error(err);
                             });
                     } else {
+                        console.log('업로드할게없음');
                         navigate('/board');
                     }
                 })
